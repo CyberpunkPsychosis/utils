@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Excel解析配置类
  * ignoreTitle 设置是否忽略表头（如果忽略则不读取）
- * ignoreCellBlank 设置是否忽略空单元格（如果忽略则不读取）
+ * ignoreCellBlank 设置是否读取空单元格所在的行（默认不读取，如果设置则读取）
  */
 public class ExcelConfig {
 

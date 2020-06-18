@@ -2,7 +2,10 @@ package com.yumeng.utils;
 
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
+import org.apache.poi.hssf.usermodel.HSSFPictureData;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFPictureData;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,8 +63,19 @@ class UtilsApplicationTests {
 
         ExcelParse excelParse = new ExcelParse(excelConfig);
 
-        List<Map<Integer, List<String>>> list = excelParse.resolveExcelWord(workBook);
+        List<Map<Integer, Map<Integer, String >>> list = excelParse.resolveExcelWordOnImage(workBook);
 
-        System.out.println(list.size());
+        System.out.println(list);
+
+//        ExcelParse excelParse = new ExcelParse();
+//        List<Map<Integer, Map<Integer, XSSFPictureData>>> list = null;
+//        try {
+//            list = excelParse.getPicturesXlsx(workBook);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+//        System.out.println(list);
+//        System.out.println(list);
     }
 }
