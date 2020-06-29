@@ -2,10 +2,7 @@ package com.yumeng.utils;
 
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFPictureData;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +76,50 @@ class UtilsApplicationTests {
 
 //        System.out.println(list);
 //        System.out.println(list);
+    }
+
+    @Test
+    void contextLoads2() {
+//        A a = new A();
+//        a.setName("aaa");
+//        A a2 = new A();
+//        a2.setName("bbb");
+//        A a3 = new A();
+//        a3.setName("ccc");
+//        A a4 = new A();
+//        a4.setName("aaa");
+//
+//        List<A> list = new ArrayList<>();
+//
+//        list.add(a);
+//        list.add(a2);
+//        list.add(a3);
+//        list.add(a4);
+//
+//
+//        list = list.stream().filter(ListUtil.distinctByKey(A::getName)).collect(Collectors.toList());
+//
+//
+//        System.out.println(list.size());
+        InetAddress ip = null;
+        try {
+            ip= InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        System.out.println(ip.getHostAddress());
+    }
+
+
+    class A{
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }
