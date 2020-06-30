@@ -2,6 +2,7 @@ package com.yumeng.utils;
 
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
+import com.yumeng.utils.qrcode_utils.QrCodeUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,46 +79,13 @@ class UtilsApplicationTests {
 
     @Test
     void contextLoads2() {
-//        A a = new A();
-//        a.setName("aaa");
-//        A a2 = new A();
-//        a2.setName("bbb");
-//        A a3 = new A();
-//        a3.setName("ccc");
-//        A a4 = new A();
-//        a4.setName("aaa");
-//
-//        List<A> list = new ArrayList<>();
-//
-//        list.add(a);
-//        list.add(a2);
-//        list.add(a3);
-//        list.add(a4);
-//
-//
-//        list = list.stream().filter(ListUtil.distinctByKey(A::getName)).collect(Collectors.toList());
-//
-//
-//        System.out.println(list.size());
-        InetAddress ip = null;
-        try {
-            ip= InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        System.out.println(ip.getHostAddress());
-    }
-
-
-    class A{
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+//        try {
+//            QrCodeUtils.encode("weixin://wxpay/bizpayurl?pr=smvdbCD", "G:\\img", true);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String filename = "https://yuantongbucket.oss-cn-beijing.aliyuncs.com/qrcode/48194f172c2243a8b3076ffa8845dd98.jpg";
+//        String relativePath = filename.substring(filename.lastIndexOf("/",filename.lastIndexOf("/")-1)+1);
+//        System.out.println(relativePath);
     }
 }
