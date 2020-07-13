@@ -291,7 +291,7 @@ public class ExcelParse {
                     short col = cAnchor.getCol1();
 
                     if (map.containsKey(row+1)){
-                        map.get(row+1).put(col, picture.getPictureData());
+                        map.get(row+1).put((short) (col+1), picture.getPictureData());
                     }else {
                         Map<Short, HSSFPictureData> temp = new HashMap<>();
                         temp.put((short) (col+1), picture.getPictureData());
