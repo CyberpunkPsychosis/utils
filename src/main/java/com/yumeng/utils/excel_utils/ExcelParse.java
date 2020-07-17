@@ -221,6 +221,9 @@ public class ExcelParse {
 
     //判断是否是空行
     private boolean isRowEmpty(Row row) {
+        if (row == null){
+            return true;
+        }
         for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
             Cell cell = row.getCell(c);
             if (cell != null && cell.getCellType() != CellType.BLANK)
@@ -230,7 +233,7 @@ public class ExcelParse {
     }
 
     //读取Xlsx图片，获取行号和列号
-    public List<Map<Integer, Map<Integer, XSSFPictureData>>> getPicturesXlsx (Workbook workBook) throws IOException {
+    public static List<Map<Integer, Map<Integer, XSSFPictureData>>> getPicturesXlsx (Workbook workBook) throws IOException {
 
         List<Map<Integer, Map<Integer, XSSFPictureData>>> ret = new ArrayList<>();
 
@@ -270,7 +273,7 @@ public class ExcelParse {
     }
 
     //读取Xls图片，获取行号和列号
-    public List<Map<Integer, Map<Short, HSSFPictureData>>> getPicturesXls (Workbook workBook) throws IOException {
+    public static List<Map<Integer, Map<Short, HSSFPictureData>>> getPicturesXls (Workbook workBook) throws IOException {
 
         List<Map<Integer, Map<Short, HSSFPictureData>>> ret = new ArrayList<>();
 
