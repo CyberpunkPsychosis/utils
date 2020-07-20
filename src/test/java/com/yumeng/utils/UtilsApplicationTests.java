@@ -2,8 +2,7 @@ package com.yumeng.utils;
 
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
-import com.yumeng.utils.excel_valid_utils.RowEntity;
-import com.yumeng.utils.excel_valid_utils.RowEntityImpl;
+import com.yumeng.utils.excel_valid_utils.*;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -13,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,15 +25,11 @@ class UtilsApplicationTests {
     @Test
     void contextLoads() {
 
-
         List<Map<Integer, Map<Integer, XSSFPictureData>>> mapXlsx = null;
         List<Map<Integer, Map<Short, HSSFPictureData>>> mapXls = null;
-
         Workbook workbook = null;
-
         File file = new File("C:\\Users\\user1\\Desktop\\商品备案表格.xlsx");
         try {
-//            file = MultipartFileToFile(multiFile);
             String fileName = file.getName();
             InputStream inputStream = new FileInputStream(file);
             if (fileName.toLowerCase().endsWith("xlsx")) {
@@ -49,12 +43,6 @@ class UtilsApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
         ExcelConfig excelConfig = new ExcelConfig();
 
         Map<Integer, Boolean> map = new HashMap<>();
@@ -69,29 +57,49 @@ class UtilsApplicationTests {
 
         Map<Integer, Map<Integer, String>> sheet = list.get(0);
 
-        Iterator<Map.Entry<Integer, Map<Integer, String>>> var1 = sheet.entrySet().iterator();
-
         List<RowEntity> rowEntityList = new ArrayList<>();
-        while (var1.hasNext()){
-            Map<Integer, String> row = var1.next().getValue();
 
-            RowEntityImpl rowEntity = new RowEntityImpl(var1.next().getKey());
+        for (Integer var1: sheet.keySet()) {
 
-            Iterator<Map.Entry<Integer, String >> var2 = row.entrySet().iterator();
+            Map<Integer, String> row = sheet.get(var1);
 
-            while (var2.hasNext()){
-                rowEntity.addData(var2.next().getValue());
+            RowEntityImpl rowEntity = new RowEntityImpl(var1);
+
+            for (Integer var2: row.keySet()) {
+                rowEntity.addData(var2, row.get(var2));
             }
 
             rowEntityList.add(rowEntity);
         }
 
+//        if (mapXls != null){
+//            Map<Integer, Map<Short, HSSFPictureData>> var3 = mapXls.get(0);
+//        }
 
         System.out.println(rowEntityList);
 
+        Validator isNotChineseValidator = new IsNotChineseValidator("商品名称(英文)不能为包含中文");
+        Validator isNotNullValidator = new IsNotNullValidator("JanCode 不能为空");
+
+        ValidatorsConfig validatorsConfig = new ValidatorsConfig();
+
+        validatorsConfig.addValidator(3, isNotChineseValidator);
+
+        validatorsConfig.addValidator(4, isNotNullValidator);
+
+        rowEntityList.forEach(row -> {row.initValidators(validatorsConfig.getValidator());});
+
+        rowEntityList.forEach(RowEntity::check);
+
+        Map<Integer, List<String>> errors = new HashMap<>();
+
+        rowEntityList.forEach(row -> {
+            if (row.getErrorList().size() != 0){
+                errors.put(row.getRowNum(), row.getErrorList());
+            }
+        });
+        System.out.println(errors);
     }
-
-
 
     public static File MultipartFileToFile(MultipartFile multiFile) {
         // 获取文件名

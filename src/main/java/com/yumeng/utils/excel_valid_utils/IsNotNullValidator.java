@@ -1,13 +1,10 @@
 package com.yumeng.utils.excel_valid_utils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class ValidatorImpl implements Validator{
+public class IsNotNullValidator implements Validator{
 
     private String message;
 
-    public ValidatorImpl(String message) {
+    public IsNotNullValidator(String message) {
         this.message = message;
     }
 
@@ -21,15 +18,9 @@ public class ValidatorImpl implements Validator{
 
     @Override
     public String error(String value) {
-        if (isContainChinese(value)){
+        if (value == null || (value != null && value.equals(""))){
             return this.message;
         }
         return null;
-    }
-
-    public static boolean isContainChinese(String str) {
-        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
-        Matcher m = p.matcher(str);
-        return m.find();
     }
 }
