@@ -12,4 +12,6 @@ public interface RowEntity {
     void initValidators(Map<Integer, List<Validator>> map);
 
     void check();
+
+    void addData(int i, String value);
 }

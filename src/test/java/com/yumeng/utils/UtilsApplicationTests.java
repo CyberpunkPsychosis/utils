@@ -43,6 +43,8 @@ class UtilsApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         ExcelConfig excelConfig = new ExcelConfig();
 
         Map<Integer, Boolean> map = new HashMap<>();
@@ -72,20 +74,43 @@ class UtilsApplicationTests {
             rowEntityList.add(rowEntity);
         }
 
-//        if (mapXls != null){
-//            Map<Integer, Map<Short, HSSFPictureData>> var3 = mapXls.get(0);
-//        }
+        if (mapXls != null){
+            Map<Integer, Map<Short, HSSFPictureData>> var3 = mapXls.get(0);
+            rowEntityList.forEach(row -> {
+                if (var3.containsKey(row.getRowNum())){
+                    Map<Short, HSSFPictureData> cols = var3.get(row.getRowNum());
+                    for (Short i: cols.keySet()) {
+                        row.addData(i, "true");
+                    }
+                }
+            });
+        }
+
+        if (mapXlsx != null){
+            Map<Integer, Map<Integer, XSSFPictureData>> var4 = mapXlsx.get(0);
+            rowEntityList.forEach(row -> {
+                if (var4.containsKey(row.getRowNum())){
+                    Map<Integer, XSSFPictureData> cols = var4.get(row.getRowNum());
+                    for (int i: cols.keySet()) {
+                        row.addData(i, "true");
+                    }
+                }
+            });
+        }
 
         System.out.println(rowEntityList);
 
         Validator isNotChineseValidator = new IsNotChineseValidator("商品名称(英文)不能为包含中文");
         Validator isNotNullValidator = new IsNotNullValidator("JanCode 不能为空");
+        Validator isImgNotNullValidator = new IsImgNotNullValidator("商品图片不能为空");
 
         ValidatorsConfig validatorsConfig = new ValidatorsConfig();
 
         validatorsConfig.addValidator(3, isNotChineseValidator);
 
         validatorsConfig.addValidator(4, isNotNullValidator);
+
+        validatorsConfig.addValidator(1, isImgNotNullValidator);
 
         rowEntityList.forEach(row -> {row.initValidators(validatorsConfig.getValidator());});
 
@@ -98,6 +123,7 @@ class UtilsApplicationTests {
                 errors.put(row.getRowNum(), row.getErrorList());
             }
         });
+
         System.out.println(errors);
     }
 
