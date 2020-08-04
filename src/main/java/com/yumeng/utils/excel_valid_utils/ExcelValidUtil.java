@@ -23,11 +23,10 @@ import java.util.Map;
  */
 public class ExcelValidUtil {
 
-    public static List<RowEntity> createRowEntityList(String path){
+    public static List<RowEntity> createRowEntityList(File file){
         List<Map<Integer, Map<Integer, XSSFPictureData>>> mapXlsx = new ArrayList<>();
         List<Map<Integer, Map<Short, HSSFPictureData>>> mapXls = new ArrayList<>();
         Workbook workbook = null;
-        File file = new File(path);
         try {
             String fileName = file.getName();
             InputStream inputStream = new FileInputStream(file);

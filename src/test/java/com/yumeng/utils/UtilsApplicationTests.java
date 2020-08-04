@@ -23,8 +23,10 @@ class UtilsApplicationTests {
     //表格校验示例代码
     @Test
     void contextLoads1() {
-        List<RowEntity> rowEntityList = ExcelValidUtil.createRowEntityList("C:\\Users\\user1\\Desktop\\一单到底号段 (5).xlsx");
 
+        String path = "C:\\Users\\user1\\Desktop\\一单到底号段 (5).xlsx";
+        File file = new File(path);
+        List<RowEntity> rowEntityList = ExcelValidUtil.createRowEntityList(file);
         //实例化校验器
         Validator isNotChineseValidator = new IsNotChineseValidator("商品名称(英文)不能包含中文");
         Validator isNotNullValidator = new IsNotNullValidator("JanCode 不能为空");
