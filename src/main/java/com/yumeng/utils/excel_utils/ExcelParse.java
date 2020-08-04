@@ -190,7 +190,6 @@ public class ExcelParse {
                 map.put(rowNum, new HashMap<>());
                 for(Cell cell : sheet.getRow(j)){
                     switch(cell.getCellType()) {
-
                         case _NONE:
                         case BLANK:
                         case BOOLEAN:

@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,14 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @SpringBootTest
 class UtilsApplicationTests {
 
     //表格校验示例代码
     @Test
     void contextLoads1() {
-        List<RowEntity> rowEntityList = ExcelValidUtil.createRowEntityList("C:\\Users\\user1\\Desktop\\测试商品备案表格(3).xls");
+        List<RowEntity> rowEntityList = ExcelValidUtil.createRowEntityList("C:\\Users\\user1\\Desktop\\一单到底号段 (5).xlsx");
 
         //实例化校验器
         Validator isNotChineseValidator = new IsNotChineseValidator("商品名称(英文)不能包含中文");
@@ -34,24 +32,25 @@ class UtilsApplicationTests {
 
         //配置校验器应用的列号（可以重复）
         ValidatorsConfig validatorsConfig = new ValidatorsConfig();
-        validatorsConfig.addValidator(3, isNotChineseValidator);
-        validatorsConfig.addValidator(4, isNotNullValidator);
-        validatorsConfig.addValidator(1, isImgNotNullValidator);
+//        validatorsConfig.addValidator(3, isNotChineseValidator);
+        validatorsConfig.addValidator(1, isNotNullValidator);
+        validatorsConfig.addValidator(2, isNotNullValidator);
+
+//        validatorsConfig.addValidator(1, isImgNotNullValidator);
 
         //初始化校验器
         rowEntityList.forEach(row -> {row.initValidators(validatorsConfig.getValidator());});
-
         //检查
         rowEntityList.forEach(RowEntity::check);
-
         Map<Integer, List<String>> errors = new HashMap<>();
-
         //获取里面的错误列表和行号
         rowEntityList.forEach(row -> {
             if (row.getErrorList().size() != 0){
                 errors.put(row.getRowNum(), row.getErrorList());
             }
         });
+
+        System.out.println(rowEntityList.toString());
         System.out.println(errors.toString());
     }
 
