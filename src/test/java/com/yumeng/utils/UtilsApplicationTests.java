@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static java.util.stream.LongStream.range;
+
 
 @SpringBootTest
 class UtilsApplicationTests {
@@ -145,4 +147,12 @@ class UtilsApplicationTests {
         }
         return null;
     }
+
+    @Test
+    void contextLoads2() {
+        range(1,3).forEach(x -> {
+            System.out.println("aaa");
+        });
+    }
+
 }
