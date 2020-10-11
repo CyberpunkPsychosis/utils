@@ -169,30 +169,27 @@ public class ExcelParse {
 
             int rowNum = 1;
 
-            for(Row row : sheet){
+            int startRowIndex = sheet.getFirstRowNum();
+            int endRowIndex = sheet.getLastRowNum();
+            for (int j = startRowIndex; j <= endRowIndex; j++ ){
+
+                if (isRowEmpty(sheet.getRow(j))){
+                    rowNum++;
+                    continue;
+                }
 
                 if (ignoreTitle != null){
                     if (ignoreTitle.containsKey(sheetNum)){
-                        if (row.getRowNum() == 0){
+                        if (sheet.getRow(j).getRowNum() == 0){
                             rowNum++;
                             continue;
                         }
                     }
                 }
 
-                if (isRowEmpty(row)){
-                    rowNum++;
-                    continue;
-                }
-
                 map.put(rowNum, new HashMap<>());
-
-
-                for(Cell cell : row){
-
-
+                for(Cell cell : sheet.getRow(j)){
                     switch(cell.getCellType()) {
-
                         case _NONE:
                         case BLANK:
                         case BOOLEAN:

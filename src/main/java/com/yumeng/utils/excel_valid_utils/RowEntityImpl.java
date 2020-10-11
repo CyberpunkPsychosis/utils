@@ -49,4 +49,13 @@ public class RowEntityImpl implements RowEntity{
         }
         return errors;
     }
+
+
+    @Override
+    public String toString() {
+        return "RowEntityImpl{" +
+                "rowNum=" + rowNum +
+                ", map=" + map +
+                '}';
+    }
 }
