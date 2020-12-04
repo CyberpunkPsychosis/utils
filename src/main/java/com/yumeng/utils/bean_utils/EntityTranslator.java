@@ -1,6 +1,5 @@
 package com.yumeng.utils.bean_utils;
 
-import com.yumeng.utils.string_utils.StringTranslator;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;

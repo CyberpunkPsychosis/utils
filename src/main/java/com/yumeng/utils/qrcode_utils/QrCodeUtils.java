@@ -7,7 +7,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.yumeng.utils.file_utils.FileUtils;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class QrCodeUtils {
     private static void insertImage(BufferedImage source, String logoPath, boolean needCompress) throws IOException {
         InputStream inputStream = null;
         try {
-            inputStream = FileUtils.getResourceAsStream(logoPath);
+            inputStream = getResourceAsStream(logoPath);
             Image src = ImageIO.read(inputStream);
             int width = src.getWidth(null);
             int height = src.getHeight(null);
@@ -115,6 +115,10 @@ public class QrCodeUtils {
                 inputStream.close();
             }
         }
+    }
+
+    private static InputStream getResourceAsStream(String logoPath) {
+        return FileUtils.class.getResourceAsStream(logoPath);
     }
 
     /**
