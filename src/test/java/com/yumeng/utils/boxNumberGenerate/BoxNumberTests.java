@@ -25,7 +25,7 @@ public class BoxNumberTests {
                     .thenComparing(Box::getCodeDigit))
                     .collect(Collectors.toList());
             Box last = list.get(list.size()-1);
-            if (last.getCodeNumber() < 10){
+            if (last.getCodeDigit() < 10){
                 System.out.println(last.getCodeLetter());
                 System.out.println(last.getCodeNumber());
                 System.out.println(last.getCodeDigit() + 1);
