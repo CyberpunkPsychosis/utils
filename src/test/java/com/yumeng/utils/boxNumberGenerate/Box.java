@@ -2,10 +2,19 @@ package com.yumeng.utils.boxNumberGenerate;
 
 public class Box {
 
+    /**
+     * 编号字母 A-1里的A
+     */
     private String codeLetter;
 
+    /**
+     * 编号字母数量AA-1  2个A就为2
+     */
     private Integer codeNumber;
 
+    /**
+     * 编号数字A-1里的1
+     */
     private Integer codeDigit;
 
     public String getCodeLetter() {

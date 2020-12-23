@@ -8,6 +8,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * 数据库存储三个字段，分别是编号字母，编号字母数量，编号数字
+ */
 @SpringBootTest
 public class BoxNumberTests {
 
