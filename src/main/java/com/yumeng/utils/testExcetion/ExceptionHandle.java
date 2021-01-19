@@ -1,6 +1,6 @@
 package com.yumeng.utils.testExcetion;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.FieldError;
@@ -18,130 +18,66 @@ public class ExceptionHandle {
 
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String exceptionHandler(MethodArgumentNotValidException e)
+    public Map<String, Object> exceptionHandler(MethodArgumentNotValidException e)
     {
-        System.out.println(e.getBindingResult().getTarget());
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        getErrMap(fieldErrors);
-        for (FieldError fieldError:fieldErrors) {
-            System.out.println(fieldError.getField());
-            System.out.println(fieldError.getRejectedValue());
-            System.out.println(fieldError.getDefaultMessage());
-            System.out.println(fieldError.getCode());
-        }
-        return Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+        List<String> fieldList = getBigError(fieldErrors);
+        Map<String, Object> map = getBaseStructure(fieldList);
+        return map;
     }
 
-
-    public void getErrMap(List<FieldError> fieldErrors){
-        Map<Integer, Map<String, Object>> saveErrorMap = new TreeMap<>();
+    private List<String> getBigError(List<FieldError> fieldErrors){
+        List<String> bigList = new ArrayList<>();
         for (FieldError fieldError:fieldErrors) {
             String field = fieldError.getField();
             String[] fieldArray = field.split("\\.");
-            if (saveErrorMap.containsKey(fieldArray.length)){
-                int key = fieldArray.length;
-                if (key == 1){
-                    saveErrorMap.get(key).put(fieldArray[0], fieldError.getDefaultMessage());
-                }else {
-                    List<String> lastTwoList = null;
-                    if (fieldArray.length == 2){
-                        lastTwoList = Arrays.asList(fieldArray[fieldArray.length-2], fieldArray[fieldArray.length-1], "###[-1]");
-                    }else {
-                        lastTwoList = Arrays.asList(fieldArray[fieldArray.length-2], fieldArray[fieldArray.length-1], fieldArray[fieldArray.length-3]);
-                    }
-                    String list = lastTwoList.get(0);
-                    String listName = list.substring(0, list.indexOf("["));
-                    String sub = list.substring(list.indexOf("["));
-                    sub = StringUtils.strip(sub, "[]");
-                    String fieldName = lastTwoList.get(1);
-
-                    String parentList = lastTwoList.get(2);
-                    String parentSub = parentList.substring(parentList.indexOf("["));
-                    parentSub = StringUtils.strip(parentSub, "[]");
-
-                    Map<String, Object> listMap = saveErrorMap.get(key);
-                    Map<Integer, List<Map<String, Object>>> indexSubMap = (Map<Integer, List<Map<String, Object>>>) listMap.get(listName);
-                    List<Map<String, Object>> subList = indexSubMap.get(Integer.parseInt(parentSub));
-                    if (subList == null){
-                        List<Map<String, Object>> subTempList = new ArrayList<>();
-                        for (int i = 0; i < Integer.parseInt(sub); i++){
-                            Map<String, Object> map = new HashMap<>(16);
-                            map.put(fieldName, "");
-                            subTempList.add(map);
-                        }
-                        Map<String, Object> map = new HashMap<>(16);
-                        map.put(fieldName, fieldError.getDefaultMessage());
-                        subTempList.add(map);
-                        indexSubMap.put(Integer.parseInt(parentSub), subTempList);
-                    }else {
-                        if (subList.size() >= Integer.parseInt(sub) + 1){
-                            for (int i = 0; i < subList.size(); i++){
-                                if (i == Integer.parseInt(sub)){
-                                    subList.get(i).put(fieldName, fieldError.getDefaultMessage());
-                                }
-                            }
-                        }else {
-                            int lastSub = subList.size();
-                            for (int i = lastSub; i < Integer.parseInt(sub); i++){
-                                Map<String, Object> map = new HashMap<>(16);
-                                map.put(fieldName, "");
-                                subList.add(map);
-                            }
-                            Map<String, Object> map = new HashMap<>(16);
-                            map.put(fieldName, fieldError.getDefaultMessage());
-                            subList.add(map);
-                        }
-                    }
-                }
-            }else {
-                if (fieldArray.length == 1){
-                    Map<String, Object> map = new HashMap<>(16);
-                    map.put(fieldArray[0], fieldError.getDefaultMessage());
-                    saveErrorMap.put(fieldArray.length, map);
-                }else {
-                    List<String> lastTwoList = null;
-                    if (fieldArray.length == 2){
-                        lastTwoList = Arrays.asList(fieldArray[fieldArray.length-2], fieldArray[fieldArray.length-1], "###[-1]");
-                    }else {
-                        lastTwoList = Arrays.asList(fieldArray[fieldArray.length-2], fieldArray[fieldArray.length-1], fieldArray[fieldArray.length-3]);
-                    }
-                    String list = lastTwoList.get(0);
-                    String listName = list.substring(0, list.indexOf("["));
-                    String sub = list.substring(list.indexOf("["));
-                    sub = StringUtils.strip(sub, "[]");
-
-                    String parentList = lastTwoList.get(2);
-                    String parentSub = parentList.substring(parentList.indexOf("["));
-                    parentSub = StringUtils.strip(parentSub, "[]");
-
-                    String fieldName = lastTwoList.get(1);
-                    List<Map<String, Object>> subList = new ArrayList<>();
-                    for (int i = 0; i < Integer.parseInt(sub); i++){
-                        Map<String, Object> map = new HashMap<>(16);
-                        map.put(fieldName, "");
-                        subList.add(map);
-                    }
-                    Map<String, Object> map = new HashMap<>(16);
-                    map.put(fieldName, fieldError.getDefaultMessage());
-                    subList.add(map);
-                    Map<String, Object> listMap = new HashMap<>(16);
-                    Map<Integer, List<Map<String, Object>>> indexSubMap = new HashMap<>();
-                    indexSubMap.put(Integer.parseInt(parentSub), subList);
-                    listMap.put(listName, indexSubMap);
-                    saveErrorMap.put(fieldArray.length, listMap);
-                }
+            List<String> fieldList = new ArrayList<>(Arrays.asList(fieldArray));
+            fieldList.add(fieldError.getDefaultMessage());
+            if (fieldList.size() >= bigList.size()){
+                bigList = fieldList;
             }
         }
-        System.out.println(saveErrorMap);
-        List<Integer> keyList = new ArrayList<>();
-        for (Integer key: saveErrorMap.keySet()) {
-            keyList.add(key);
-        }
-        Collections.reverse(keyList);
-
+        return bigList;
     }
 
-    public static void main(String[] args) {
-
+    private Map<String, Object> getBaseStructure(List<String> fieldList){
+        Map<String, Object> result = new LinkedMap<>();
+        String fieldName = fieldList.get(fieldList.size()-2);
+        int listSize = fieldList.size() - 2;
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new LinkedMap<>();
+        map.put(fieldName, fieldList.get(fieldList.size()-1));
+        list.add(map);
+        List<Map<String, Object>> var3 = new ArrayList<>();
+        for (int i = listSize - 1 ; i >= 0; i--) {
+            if (i == listSize - 1){
+                continue;
+            }
+            if (i == listSize - 2){
+                List<Map<String, Object>> var1 = new ArrayList<>();
+                Map<String, Object> var2 = new LinkedMap<>();
+                String last = fieldList.get(i + 1);
+                String listName = last.substring(0, last.indexOf("["));
+                var2.put(listName, list);
+                var1.add(var2);
+                var3 = var1;
+            }else {
+                List<Map<String, Object>> var1 = new ArrayList<>();
+                Map<String, Object> var2 = new LinkedMap<>();
+                String last = fieldList.get(i + 1);
+                String listName = last.substring(0, last.indexOf("["));
+                var2.put(listName, var3);
+                var1.add(var2);
+                var3 = var1;
+            }
+        }
+        if (fieldList.size() == 2){
+            result.put(fieldList.get(0), fieldList.get(1));
+        }else {
+            String first = fieldList.get(0);
+            String firstName = first.substring(0, first.indexOf("["));
+            result.put(firstName, var3);
+        }
+        return result;
     }
 }
