@@ -41,11 +41,13 @@ public final class EntityTranslator {
                         //获取原对象Get方法，获取值
                         String getMethodName = StringUtils.capitalize(key);
                         Method get = source.getClass().getMethod("get" + getMethodName);
+                        get.setAccessible(true);
                         String value = (String) get.invoke(source);
 
                         //获取目标对象Set方法，用原对象的值赋值
                         String setMethodName = StringUtils.capitalize(key);
                         Method set = targetClass.getDeclaredMethod("set" + setMethodName, targetClass.getDeclaredField(map.get(key)).getType());
+                        set.setAccessible(true);
                         set.invoke(doInstance,value);
 
                     } catch (NoSuchMethodException | InvocationTargetException | NoSuchFieldException e) {
