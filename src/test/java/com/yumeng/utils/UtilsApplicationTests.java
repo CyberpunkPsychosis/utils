@@ -1,9 +1,8 @@
 package com.yumeng.utils;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.esotericsoftware.reflectasm.MethodAccess;
-import com.yumeng.utils.bean_utils.EntityTranslator;
-import com.yumeng.utils.bean_utils.Test1;
-import com.yumeng.utils.bean_utils.Test2;
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
 import com.yumeng.utils.excel_valid_utils.*;
@@ -18,9 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,37 +95,20 @@ class UtilsApplicationTests {
 
     @Test
     void contextLoads3() {
-        Test1 test1 = new Test1();
-        MethodAccess access = MethodAccess.get(Test1.class);
-        long start1 = System.currentTimeMillis();
-        int addNameIndex = access.getIndex("setName");
-        for (int i = 0; i < 1000000; i++) {
-            access.invoke(test1, addNameIndex, "Awesome McLovin");
-        }
-        System.out.println(System.currentTimeMillis() - start1);
+        String fileName = "C:\\Users\\user1\\Desktop\\B2B客户订单模板(1).xls";
+        TestDataListener testDataListener = new TestDataListener();
+        testDataListener.setList(new ArrayList<>());
+        // 这里默认读取第一个sheet
+        EasyExcel.read(fileName, com.yumeng.utils.Test.class, testDataListener)
+//                .extraRead(CellExtraTypeEnum.MERGE)
+                .sheet()
+                .headRowNumber(10).doRead();
+    }
 
-
-        long start2 = System.currentTimeMillis();
-        Method set = null;
-        try {
-            Test1 doInstance = null;
-            try {
-                doInstance = test1.getClass().newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
-            set = test1.getClass().getDeclaredMethod("setName");
-//            set.setAccessible(true);
-            try {
-                for (int i = 0; i < 1000000; i++) {
-                    set.invoke(doInstance,"Awesome McLovin");
-                }
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        } catch (NoSuchMethodException | IllegalAccessException e ) {
-            e.printStackTrace();
-        }
-        System.out.println(System.currentTimeMillis() - start2);
+    @Test
+    void contextLoads4() {
+        String s = new String("sss");
+        MethodAccess access = MethodAccess.get(s.getClass());
+        access.invoke(s, "setIndex", 1);
     }
 }
