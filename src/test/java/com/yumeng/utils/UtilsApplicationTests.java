@@ -8,6 +8,7 @@ import com.yumeng.utils.excel_utils.ExcelParse;
 import com.yumeng.utils.excel_valid_utils.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 class UtilsApplicationTests {
@@ -95,20 +93,17 @@ class UtilsApplicationTests {
 
     @Test
     void contextLoads3() {
-        String fileName = "C:\\Users\\user1\\Desktop\\B2B客户订单模板(1).xls";
-        TestDataListener testDataListener = new TestDataListener();
-        testDataListener.setList(new ArrayList<>());
-        // 这里默认读取第一个sheet
-        EasyExcel.read(fileName, com.yumeng.utils.Test.class, testDataListener)
-//                .extraRead(CellExtraTypeEnum.MERGE)
-                .sheet()
-                .headRowNumber(10).doRead();
-    }
-
-    @Test
-    void contextLoads4() {
-        String s = new String("sss");
-        MethodAccess access = MethodAccess.get(s.getClass());
-        access.invoke(s, "setIndex", 1);
+        List<Integer> ignoreRow1 = Arrays.asList(10, 23, 16);
+        List<Integer> ignoreRow2 = Arrays.asList(24);
+        ExcelImportUtil excelImportUtil = new ExcelImportUtil();
+        try {
+            excelImportUtil.setFilePath("C:\\Users\\user1\\Desktop\\B2B客户订单模板(1).xls")
+                    .read(10, 23, new com.yumeng.utils.Test(), new ArrayList<>(), ignoreRow1)
+                    .read(24, 102, new Test1(), new ArrayList<>(), ignoreRow2);
+            System.out.println(excelImportUtil.getMap());
+            System.out.println("OK");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
