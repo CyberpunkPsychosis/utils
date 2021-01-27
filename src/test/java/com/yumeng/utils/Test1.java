@@ -23,6 +23,16 @@ public class Test1 {
     @ExcelProperty(index = 11)
     public String boxNumber;
 
+    private String index;
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
     public String getJanCode() {
         return janCode;
     }

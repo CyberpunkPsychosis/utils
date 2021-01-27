@@ -1,6 +1,7 @@
 package com.yumeng.utils.excel_valid_utils;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.enums.CellExtraTypeEnum;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +35,14 @@ public class ExcelImportUtil {
         if (startRow <= 0 || endRow <= 0){
             throw new Exception("起始行/结束行超出范围");
         }
-        DataListener<G> dataListener = new DataListener();
+        DataListener<G> dataListener = new DataListener<>();
+        dataListener.setStartRow(startRow);
         dataListener.setEndRow(endRow);
         dataListener.setIgnoreRow(ignoreRow);
+        dataListener.setMergeCell(mergeCell);
         dataListener.setMap(this.map);
         EasyExcel.read(this.filePath, g.getClass(), dataListener)
+                .extraRead(CellExtraTypeEnum.MERGE)
                 .sheet()
                 .headRowNumber(startRow).doRead();
         return this;

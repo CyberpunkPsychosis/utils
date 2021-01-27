@@ -25,6 +25,17 @@ public class Test {
     @ExcelProperty("G.W(KG)")
     private String GW;
 
+    @ExcelProperty("index")
+    private String index;
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
     public String getPackingNo() {
         return packingNo;
     }

@@ -1,14 +1,10 @@
 package com.yumeng.utils;
 
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.enums.CellExtraTypeEnum;
-import com.esotericsoftware.reflectasm.MethodAccess;
 import com.yumeng.utils.excel_utils.ExcelConfig;
 import com.yumeng.utils.excel_utils.ExcelParse;
 import com.yumeng.utils.excel_valid_utils.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
@@ -95,13 +91,14 @@ class UtilsApplicationTests {
     void contextLoads3() {
         List<Integer> ignoreRow1 = Arrays.asList(10, 23, 16);
         List<Integer> ignoreRow2 = Arrays.asList(24);
+        List<Integer> mergeCell1 = Arrays.asList(3);
         ExcelImportUtil excelImportUtil = new ExcelImportUtil();
         try {
             excelImportUtil.setFilePath("C:\\Users\\user1\\Desktop\\B2B客户订单模板(1).xls")
-                    .read(10, 23, new com.yumeng.utils.Test(), new ArrayList<>(), ignoreRow1)
+                    .read(10, 23, new com.yumeng.utils.Test(), mergeCell1, ignoreRow1)
                     .read(24, 102, new Test1(), new ArrayList<>(), ignoreRow2);
-            System.out.println(excelImportUtil.getMap());
-            System.out.println("OK");
+//            System.out.println(excelImportUtil.getMap());
+//            System.out.println("OK");
         } catch (Exception e) {
             e.printStackTrace();
         }
