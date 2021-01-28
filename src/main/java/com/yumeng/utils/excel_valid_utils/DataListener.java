@@ -21,8 +21,6 @@ public class DataListener<G> extends AnalysisEventListener<G> {
 
     private Integer startRow;
 
-    private Integer endRow;
-
     private List<Integer> ignoreRow;
 
     private List<Integer> mergeCell;
@@ -31,6 +29,14 @@ public class DataListener<G> extends AnalysisEventListener<G> {
 
     private Map<String, Object> map;
 
+    private boolean endFlag = false;
+
+    private ExcelImportUtil excelImportUtil;
+
+    public void setExcelImportUtil(ExcelImportUtil excelImportUtil) {
+        this.excelImportUtil = excelImportUtil;
+    }
+
     private final List<CellExtra> cellExtraList = new ArrayList<>();
 
     public void setMap(Map<String, Object> map) {
@@ -38,10 +44,6 @@ public class DataListener<G> extends AnalysisEventListener<G> {
     }
 
     public void setStartRow(Integer startRow) { this.startRow = startRow; }
-
-    public void setEndRow(Integer endRow) {
-        this.endRow = endRow;
-    }
 
     public void setIgnoreRow(List<Integer> ignoreRow) {
         this.ignoreRow = ignoreRow;
@@ -58,16 +60,43 @@ public class DataListener<G> extends AnalysisEventListener<G> {
         try {
             access.invoke(g, "setIndex", String.valueOf(rowNum));
         } catch (IllegalArgumentException ignored) {}
-        if (!this.ignoreRow.contains(rowNum) && rowNum <= this.endRow){
+
+        Class clazz = g.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getAnnotation(EndFlag.class) != null){
+                field.setAccessible(true);
+                try {
+                    String endFlagStr = (String)field.get(g);
+                    if (field.getAnnotation(EndFlag.class).value().equals(endFlagStr)){
+                        endFlag = true;
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (!this.ignoreRow.contains(rowNum) && !endFlag){
             this.list.add(g);
         }
-        if (rowNum <= this.endRow){
+        if (!endFlag){
             this.allList.add(g);
         }
     }
 
+
+
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+
+        G last = this.allList.get(this.allList.size() - 1);
+        MethodAccess access = MethodAccess.get(last.getClass());
+        try {
+            String index = (String)access.invoke(last, "getIndex");
+            this.excelImportUtil.setIndex(Integer.parseInt(index) + 1);
+        } catch (IllegalArgumentException ignored) {}
+
         List<CellExtra> filtered = new ArrayList<>();
         for (CellExtra cellExtra:cellExtraList) {
             if (this.mergeCell.contains(cellExtra.getFirstColumnIndex()+1)){
@@ -169,7 +198,7 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                 break;
             case MERGE:
                 int rowNum = extra.getLastRowIndex() + 1;
-                if (rowNum >= startRow && rowNum < this.endRow){
+                if (rowNum >= startRow && !endFlag){
                     this.cellExtraList.add(extra);
                 }
                 break;

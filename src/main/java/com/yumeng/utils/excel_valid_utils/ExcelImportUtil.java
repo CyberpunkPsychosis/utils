@@ -42,16 +42,26 @@ public class ExcelImportUtil {
         return errorMap;
     }
 
-    public <G> ExcelImportUtil read(Integer startRow, Integer endRow, G g, List<Integer> mergeCell, List<Integer> ignoreRow) throws Exception{
-        if (startRow <= 0 || endRow <= 0){
+    private Integer index;
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public <G> ExcelImportUtil read(Integer startRow, G g, List<Integer> mergeCell, List<Integer> ignoreRow) throws Exception{
+        if (startRow <= 0){
             throw new Exception("起始行/结束行超出范围");
         }
         DataListener<G> dataListener = new DataListener<>();
         dataListener.setStartRow(startRow);
-        dataListener.setEndRow(endRow);
         dataListener.setIgnoreRow(ignoreRow);
         dataListener.setMergeCell(mergeCell);
         dataListener.setMap(this.map);
+        dataListener.setExcelImportUtil(this);
         EasyExcel.read(this.filePath, g.getClass(), dataListener)
                 .extraRead(CellExtraTypeEnum.MERGE)
                 .sheet()

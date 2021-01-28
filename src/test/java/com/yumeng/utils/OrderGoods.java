@@ -1,29 +1,52 @@
 package com.yumeng.utils;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.yumeng.utils.excel_valid_utils.MergeCol;
 
-public class Test1 {
+import javax.validation.constraints.NotNull;
+
+public class OrderGoods {
 
     @ExcelProperty(index = 1)
+    @NotNull(message = "不为空")
     public String janCode;
     @ExcelProperty(index = 2)
+    @NotNull(message = "不为空")
     public String goodsNameEn;
     @ExcelProperty(index = 3)
+    @NotNull(message = "不为空")
     public String goodsNameCh;
     @ExcelProperty(index = 5)
+    @NotNull(message = "不为空")
     public String brand;
     @ExcelProperty(index = 7)
+    @NotNull(message = "不为空")
     public String goodsNumber;
     @ExcelProperty(index = 8)
+    @NotNull(message = "不为空")
     public String priceJp;
     @ExcelProperty(index = 9)
+    @NotNull(message = "不为空")
     public String totalPriceJp;
     @ExcelProperty(index = 10)
+    @NotNull(message = "不为空")
     public String goodsType;
     @ExcelProperty(index = 11)
+    @MergeCol(12)
+    @NotNull(message = "不为空")
     public String boxNumber;
-    @ExcelProperty(index = 12)
+
     private String index;
+
+    private String error;
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     public String getIndex() {
         return index;

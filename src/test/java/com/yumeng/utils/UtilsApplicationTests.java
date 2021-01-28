@@ -14,10 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 class UtilsApplicationTests {
@@ -93,11 +90,13 @@ class UtilsApplicationTests {
     @Test
     void contextLoads3() {
         List<Integer> ignoreRow1 = Arrays.asList(10, 23);
-        List<Integer> mergeCell1 = Arrays.asList(2, 3);
+        List<Integer> mergeCell1 = Arrays.asList(3);
+        List<Integer> mergeCell2 = Arrays.asList(12);
         ExcelImportUtil excelImportUtil = new ExcelImportUtil();
         try {
             excelImportUtil.setFilePath("C:\\Users\\user1\\Desktop\\B2B客户订单模板(1).xls")
-                    .read(10, 23, new com.yumeng.utils.Test(), mergeCell1, ignoreRow1)
+                    .read(10, new OrderBox(), mergeCell1, ignoreRow1)
+                    .read(excelImportUtil.getIndex(), new OrderGoods(), mergeCell2, new ArrayList<>())
                     .validate().generateErrorMap();
         } catch (Exception e) {
             e.printStackTrace();

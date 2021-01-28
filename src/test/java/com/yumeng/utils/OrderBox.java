@@ -1,41 +1,47 @@
 package com.yumeng.utils;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.yumeng.utils.excel_valid_utils.EndFlag;
 import com.yumeng.utils.excel_valid_utils.MergeCol;
 
 import javax.validation.constraints.NotNull;
 
-public class Test {
+public class OrderBox {
 
-    @ExcelProperty("国内地址（必填）*")
+    @ExcelProperty(index = 1)
     @MergeCol(2)
-    @NotNull(message = "缺少国内地址")
-    private String one;
+    @NotNull(message = "不为空")
+    private String homeAddress;
 
-    @ExcelProperty("托盘号（不必填）")
+    @ExcelProperty(index = 2)
     @MergeCol(3)
-    @NotNull(message = "缺少托盘号")
-    private String two;
+    @NotNull(message = "不为空")
+    private String number;
 
-    @ExcelProperty("NO. of Packing")
+    @ExcelProperty(index = 3)
+    @EndFlag("DESCRIPTION OF GOODS Chinese name\n" +
+            "商品中文名称")
+    @NotNull(message = "不为空")
     private String packingNo;
 
-    @ExcelProperty("length(cm)")
+    @ExcelProperty(index = 4)
+    @NotNull(message = "不为空")
     private String length;
 
-    @ExcelProperty("width(cm)")
+    @ExcelProperty(index = 5)
+    @NotNull(message = "不为空")
     private String width;
 
-    @ExcelProperty("height(cm)")
+    @ExcelProperty(index = 6)
+    @NotNull(message = "不为空")
     private String height;
 
-    @ExcelProperty("G.W(KG)")
+    @ExcelProperty(index = 7)
+    @NotNull(message = "不为空")
     private String GW;
 
-    @ExcelProperty("index")
     private String index;
 
-    @ExcelProperty("error")
     private String error;
 
     public String getIndex() {
@@ -86,19 +92,27 @@ public class Test {
         this.GW = GW;
     }
 
-    public String getOne() {
-        return one;
+    public String getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setOne(String one) {
-        this.one = one;
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress;
     }
 
-    public String getTwo() {
-        return two;
+    public String getNumber() {
+        return number;
     }
 
-    public void setTwo(String two) {
-        this.two = two;
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }
