@@ -29,7 +29,7 @@ public class DataListener<G> extends AnalysisEventListener<G> {
 
     private Map<String, Object> map;
 
-    private boolean endFlag = false;
+    private Integer endRow = -1;
 
     private ExcelImportUtil excelImportUtil;
 
@@ -69,7 +69,7 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                 try {
                     String endFlagStr = (String)field.get(g);
                     if (field.getAnnotation(EndFlag.class).value().equals(endFlagStr)){
-                        endFlag = true;
+                        this.endRow = rowNum;
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -77,10 +77,14 @@ public class DataListener<G> extends AnalysisEventListener<G> {
             }
         }
 
-        if (!this.ignoreRow.contains(rowNum) && !endFlag){
+        if (this.ignoreRow != null){
+            if (!this.ignoreRow.contains(rowNum) && (endRow == -1 || rowNum < endRow)){
+                this.list.add(g);
+            }
+        }else {
             this.list.add(g);
         }
-        if (!endFlag){
+        if ((endRow == -1 || rowNum < endRow)){
             this.allList.add(g);
         }
     }
@@ -99,8 +103,10 @@ public class DataListener<G> extends AnalysisEventListener<G> {
 
         List<CellExtra> filtered = new ArrayList<>();
         for (CellExtra cellExtra:cellExtraList) {
-            if (this.mergeCell.contains(cellExtra.getFirstColumnIndex()+1)){
-                filtered.add(cellExtra);
+            if (this.mergeCell != null){
+                if (this.mergeCell.contains(cellExtra.getFirstColumnIndex()+1)){
+                    filtered.add(cellExtra);
+                }
             }
         }
         Map<Integer, List<CellExtra>> filteredMap = filtered.stream()
@@ -120,8 +126,10 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                     int clearNum = 0;
                     for (int k = i; k < i + num; k++){
                         Integer var7 = getIndex(this.allList.get(k));
-                        if (this.ignoreRow.contains(var7)){
-                            clearNum++;
+                        if (this.ignoreRow != null){
+                            if (this.ignoreRow.contains(var7)){
+                                clearNum++;
+                            }
                         }
                     }
                     num -= clearNum;
@@ -198,7 +206,7 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                 break;
             case MERGE:
                 int rowNum = extra.getLastRowIndex() + 1;
-                if (rowNum >= startRow && !endFlag){
+                if (rowNum >= startRow && (endRow == -1 || rowNum < endRow)){
                     this.cellExtraList.add(extra);
                 }
                 break;
