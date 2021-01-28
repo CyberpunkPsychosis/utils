@@ -7,6 +7,7 @@ import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import org.apache.commons.collections4.map.LinkedMap;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,40 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                     i++;
                 }
             }
-            System.out.println("aaa");
+            for (Integer var8 : var2.keySet()) {
+                List<G> var9 = var2.get(var8);
+                String mergeValue = "";
+                for (G g : var9) {
+                    Class clazz = g.getClass();
+                    Field[] fields = clazz.getDeclaredFields();
+                    Field hasMergeColKey = null;
+                    for (Field field : fields) {
+                        if (field.getAnnotation(MergeCol.class) != null){
+                            if (field.getAnnotation(MergeCol.class).value() == key + 1){
+                                hasMergeColKey = field;
+                            }
+                        }
+                    }
+                    if (hasMergeColKey != null){
+                        hasMergeColKey.setAccessible(true);
+                        try {
+                            Object value = hasMergeColKey.get(g);
+                            String temp = (String)value;
+                            if (temp != null){
+                                mergeValue = temp;
+                            }else {
+                                if (mergeValue.equals("")){
+                                    hasMergeColKey.set(g,null);
+                                }else {
+                                    hasMergeColKey.set(g,mergeValue);
+                                }
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
         map.put(className, this.list);
     }

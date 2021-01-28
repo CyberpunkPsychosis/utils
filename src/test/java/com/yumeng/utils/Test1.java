@@ -22,7 +22,7 @@ public class Test1 {
     public String goodsType;
     @ExcelProperty(index = 11)
     public String boxNumber;
-
+    @ExcelProperty(index = 12)
     private String index;
 
     public String getIndex() {

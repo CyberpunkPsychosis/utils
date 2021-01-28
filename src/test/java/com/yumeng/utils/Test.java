@@ -1,13 +1,20 @@
 package com.yumeng.utils;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.yumeng.utils.excel_valid_utils.MergeCol;
+
+import javax.validation.constraints.NotNull;
 
 public class Test {
 
     @ExcelProperty("国内地址（必填）*")
+    @MergeCol(2)
+    @NotNull(message = "缺少国内地址")
     private String one;
 
     @ExcelProperty("托盘号（不必填）")
+    @MergeCol(3)
+    @NotNull(message = "缺少托盘号")
     private String two;
 
     @ExcelProperty("NO. of Packing")
@@ -27,6 +34,9 @@ public class Test {
 
     @ExcelProperty("index")
     private String index;
+
+    @ExcelProperty("error")
+    private String error;
 
     public String getIndex() {
         return index;

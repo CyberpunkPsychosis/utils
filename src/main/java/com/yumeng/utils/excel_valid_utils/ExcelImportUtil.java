@@ -2,15 +2,20 @@ package com.yumeng.utils.excel_valid_utils;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
+import org.apache.commons.collections4.map.LinkedMap;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Excel导入工具类
  */
 public class ExcelImportUtil {
+
 
     /**
      * 读取的数据
@@ -31,6 +36,12 @@ public class ExcelImportUtil {
         return this;
     }
 
+    Map<Integer, String> errorMap = new LinkedMap<>();
+
+    public Map<Integer, String> getErrorMap() {
+        return errorMap;
+    }
+
     public <G> ExcelImportUtil read(Integer startRow, Integer endRow, G g, List<Integer> mergeCell, List<Integer> ignoreRow) throws Exception{
         if (startRow <= 0 || endRow <= 0){
             throw new Exception("起始行/结束行超出范围");
@@ -45,6 +56,51 @@ public class ExcelImportUtil {
                 .extraRead(CellExtraTypeEnum.MERGE)
                 .sheet()
                 .headRowNumber(startRow).doRead();
+        return this;
+    }
+
+    public ExcelImportUtil validate(){
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        for (Map.Entry<String, Object> entry : this.map.entrySet()) {
+            Object object = entry.getValue();
+            List<Object> list = (List<Object>)object;
+            for (Object entity : list) {
+                Set<ConstraintViolation<Object>> constraintViolations = validator
+                        .validate(entity);
+                List<String> messages = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
+                Class clazz = entity.getClass();
+                try {
+                    Field field = clazz.getDeclaredField("error");
+                    field.setAccessible(true);
+                    field.set(entity,String.join(",", messages));
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return this;
+    }
+
+    public ExcelImportUtil generateErrorMap(){
+        for (Map.Entry<String, Object> entry : this.map.entrySet()) {
+            Object object = entry.getValue();
+            List<Object> list = (List<Object>)object;
+            for (Object entity : list) {
+                Class clazz = entity.getClass();
+                try {
+                    Field error = clazz.getDeclaredField("error");
+                    Field index = clazz.getDeclaredField("index");
+                    error.setAccessible(true);
+                    index.setAccessible(true);
+                    String errorMessage = (String) error.get(entity);
+                    if (errorMessage != null && !errorMessage.equals("")){
+                        this.errorMap.put(Integer.parseInt((String)index.get(entity)), errorMessage);
+                    }
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return this;
     }
 }
