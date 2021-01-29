@@ -22,36 +22,45 @@ public class ExcelImportUtil {
      * 读取的数据
      */
     private final Map<String, Object> map = new HashMap<>();
-
-    public Map<String, Object> getMap() {
-        return map;
-    }
-
+    
     /**
      * 文件路径
      */
     private String filePath;
+    
+    /**
+     * 文件流
+     */
+    private InputStream inputStream;
+    
+    /**
+     * 错误行信息
+     */
+    Map<Integer, String> errorMap = new LinkedMap<>();
+    
+    /**
+     * 读取之后,下一次读的索引
+     */
+    private Integer index;
 
     public ExcelImportUtil setFilePath(String filePath) {
         this.filePath = filePath;
         return this;
     }
 
-    private InputStream inputStream;
-
+    public Map<String, Object> getMap() {
+        return map;
+    }
+    
     public ExcelImportUtil setInputStream(InputStream inputStream){
         this.inputStream = inputStream;
         return this;
     }
-
-    Map<Integer, String> errorMap = new LinkedMap<>();
-
+    
     public Map<Integer, String> getErrorMap() {
         return errorMap;
     }
-
-    private Integer index;
-
+    
     public void setIndex(Integer index) {
         this.index = index;
     }
@@ -89,7 +98,7 @@ public class ExcelImportUtil {
         return this;
     }
 
-    public ExcelImportUtil validate(){
+    public ExcelImportUtil validate() throws Exception{
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         for (Map.Entry<String, Object> entry : this.map.entrySet()) {
             Object object = entry.getValue();
@@ -104,14 +113,14 @@ public class ExcelImportUtil {
                     field.setAccessible(true);
                     field.set(entity,String.join(",", messages));
                 } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
+                    throw new Exception("没有error属性");
                 }
             }
         }
         return this;
     }
 
-    public ExcelImportUtil generateErrorMap(){
+    public ExcelImportUtil generateErrorMap() throws Exception{
         for (Map.Entry<String, Object> entry : this.map.entrySet()) {
             Object object = entry.getValue();
             List<Object> list = (List<Object>)object;
@@ -127,7 +136,7 @@ public class ExcelImportUtil {
                         this.errorMap.put(Integer.parseInt((String)index.get(entity)), errorMessage);
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
+                    throw new Exception("没有error属性和index属性");
                 }
             }
         }
