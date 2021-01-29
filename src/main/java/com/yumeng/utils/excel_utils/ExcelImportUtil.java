@@ -3,6 +3,7 @@ package com.yumeng.utils.excel_utils;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.poi.ss.usermodel.PictureData;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -43,6 +44,11 @@ public class ExcelImportUtil {
      */
     private Integer index;
 
+    /**
+     * sheet索引
+     */
+    private Integer sheetNo = 1;
+
     public ExcelImportUtil setFilePath(String filePath) {
         this.filePath = filePath;
         return this;
@@ -69,10 +75,19 @@ public class ExcelImportUtil {
         return index;
     }
 
+    public ExcelImportUtil setSheetNo(Integer no){
+        this.sheetNo = no;
+        return this;
+    }
+
     public <G> ExcelImportUtil read(Integer startRow, G g, List<Integer> mergeCell, List<Integer> ignoreRow) throws Exception{
-        if (startRow <= 0){
-            throw new Exception("起始行/结束行超出范围");
+        if (startRow == null){
+            throw new Exception("起始行为空");
         }
+        if (startRow <= 0){
+            throw new Exception("起始行超出范围");
+        }
+
         DataListener<G> dataListener = new DataListener<>();
         dataListener.setStartRow(startRow);
         dataListener.setMergeCell(mergeCell);
@@ -83,14 +98,22 @@ public class ExcelImportUtil {
             throw new Exception("缺少数据源");
         }
         if (this.filePath == null){
+            List<Map<Integer, Map<Integer, PictureData>>> pictures = ExcelImageUtil.getSheetPictures(this.inputStream);
+            if (pictures.size() != 0){
+                dataListener.setPictureMap(pictures.get(this.sheetNo - 1));
+            }
             EasyExcel.read(this.inputStream, g.getClass(), dataListener)
                     .extraRead(CellExtraTypeEnum.MERGE)
-                    .sheet()
+                    .sheet(this.sheetNo-1)
                     .headRowNumber(startRow).doRead();
         }else if(this.inputStream == null){
+            List<Map<Integer, Map<Integer, PictureData>>> pictures = ExcelImageUtil.getSheetPictures(this.filePath);
+            if (pictures.size() != 0){
+                dataListener.setPictureMap(pictures.get(this.sheetNo - 1));
+            }
             EasyExcel.read(this.filePath, g.getClass(), dataListener)
                     .extraRead(CellExtraTypeEnum.MERGE)
-                    .sheet()
+                    .sheet(this.sheetNo-1)
                     .headRowNumber(startRow).doRead();
         }else{
             throw new Exception("数据源不明确");

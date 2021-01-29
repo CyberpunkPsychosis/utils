@@ -6,6 +6,7 @@ import com.alibaba.excel.metadata.CellExtra;
 import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.poi.ss.usermodel.PictureData;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,6 +33,12 @@ public class DataListener<G> extends AnalysisEventListener<G> {
     private Integer endRow = -1;
 
     private ExcelImportUtil excelImportUtil;
+
+    private Map<Integer, Map<Integer, PictureData>> pictureMap;
+
+    public void setPictureMap(Map<Integer, Map<Integer, PictureData>> pictureMap) {
+        this.pictureMap = pictureMap;
+    }
 
     public void setExcelImportUtil(ExcelImportUtil excelImportUtil) {
         this.excelImportUtil = excelImportUtil;
