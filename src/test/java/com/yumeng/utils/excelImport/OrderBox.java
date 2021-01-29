@@ -1,8 +1,8 @@
-package com.yumeng.utils;
+package com.yumeng.utils.excelImport;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.yumeng.utils.excel_valid_utils.EndFlag;
-import com.yumeng.utils.excel_valid_utils.MergeCol;
+import com.yumeng.utils.excel_utils.EndFlag;
+import com.yumeng.utils.excel_utils.MergeCol;
 
 import javax.validation.constraints.NotNull;
 
