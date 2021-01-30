@@ -49,6 +49,20 @@ public class ExcelImportUtil {
      */
     private Integer sheetNo = 1;
 
+    /**
+     * 处理图片的接口
+     */
+    private SaveImage saveImage;
+
+    public ExcelImportUtil setSaveImage(SaveImage saveImage){
+        this.saveImage = saveImage;
+        return this;
+    }
+
+    public SaveImage getSaveImage() {
+        return saveImage;
+    }
+
     public ExcelImportUtil setFilePath(String filePath) {
         this.filePath = filePath;
         return this;

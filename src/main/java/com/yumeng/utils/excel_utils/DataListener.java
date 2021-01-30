@@ -96,18 +96,41 @@ public class DataListener<G> extends AnalysisEventListener<G> {
         }
     }
 
-
-
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
         G last = this.allList.get(this.allList.size() - 1);
         MethodAccess access = MethodAccess.get(last.getClass());
         try {
             String index = (String)access.invoke(last, "getIndex");
             this.excelImportUtil.setIndex(Integer.parseInt(index) + 1);
         } catch (IllegalArgumentException ignored) {}
-
+        for (G g : this.list) {
+            MethodAccess var10 = MethodAccess.get(g.getClass());
+            String index = (String)var10.invoke(g, "getIndex");
+            if (this.pictureMap.containsKey(Integer.valueOf(index))){
+                Map<Integer, PictureData> var11 = this.pictureMap.get(Integer.valueOf(index));
+                Class clazz = g.getClass();
+                Field[] fields = clazz.getDeclaredFields();
+                List<Field> var12 = new ArrayList<>();
+                for (Field field : fields) {
+                    if (field.getAnnotation(ImageCol.class) != null){
+                        var12.add(field);
+                    }
+                }
+                for (Field field : var12) {
+                    field.setAccessible(true);
+                    int key = field.getAnnotation(ImageCol.class).value();
+                    if (var11.containsKey(key)){
+                        String url = this.excelImportUtil.getSaveImage().save(var11.get(key));
+                        try {
+                            field.set(g,url);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
         List<CellExtra> filtered = new ArrayList<>();
         for (CellExtra cellExtra:cellExtraList) {
             if (this.mergeCell != null){
@@ -163,18 +186,9 @@ public class DataListener<G> extends AnalysisEventListener<G> {
             }
             for (Integer var8 : var2.keySet()) {
                 List<G> var9 = var2.get(var8);
-                String mergeValue = "";
+                String mergeValue = null;
                 for (G g : var9) {
-                    Class clazz = g.getClass();
-                    Field[] fields = clazz.getDeclaredFields();
-                    Field hasMergeColKey = null;
-                    for (Field field : fields) {
-                        if (field.getAnnotation(MergeCol.class) != null){
-                            if (field.getAnnotation(MergeCol.class).value() == key + 1){
-                                hasMergeColKey = field;
-                            }
-                        }
-                    }
+                    Field hasMergeColKey = getHasMergeColKey(g.getClass(), key + 1);
                     if (hasMergeColKey != null){
                         hasMergeColKey.setAccessible(true);
                         try {
@@ -182,13 +196,18 @@ public class DataListener<G> extends AnalysisEventListener<G> {
                             String temp = (String)value;
                             if (temp != null){
                                 mergeValue = temp;
-                            }else {
-                                if (mergeValue.equals("")){
-                                    hasMergeColKey.set(g,null);
-                                }else {
-                                    hasMergeColKey.set(g,mergeValue);
-                                }
                             }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                for (G g : var9) {
+                    Field hasMergeColKey = getHasMergeColKey(g.getClass(), key + 1);
+                    if (hasMergeColKey != null){
+                        hasMergeColKey.setAccessible(true);
+                        try {
+                            hasMergeColKey.set(g,mergeValue);
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -197,6 +216,19 @@ public class DataListener<G> extends AnalysisEventListener<G> {
             }
         }
         map.put(className, this.list);
+    }
+
+    private Field getHasMergeColKey(Class clazz, Integer key){
+        Field[] fields = clazz.getDeclaredFields();
+        Field hasMergeColKey = null;
+        for (Field field : fields) {
+            if (field.getAnnotation(MergeCol.class) != null){
+                if (field.getAnnotation(MergeCol.class).value() == key){
+                    hasMergeColKey = field;
+                }
+            }
+        }
+        return hasMergeColKey;
     }
 
     private Integer getIndex(G g){
