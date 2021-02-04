@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.PictureData;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class DataListener<G> extends AnalysisEventListener<G> {
 
     private ExcelImportUtil excelImportUtil;
 
-    private Map<Integer, Map<Integer, PictureData>> pictureMap;
+    private Map<Integer, Map<Integer, PictureData>> pictureMap = new HashMap<>();
 
     public void setPictureMap(Map<Integer, Map<Integer, PictureData>> pictureMap) {
         this.pictureMap = pictureMap;
