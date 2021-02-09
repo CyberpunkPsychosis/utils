@@ -13,9 +13,9 @@ class ExcelImportTest {
     void contextLoads() {
         ExcelImportUtil excelImportUtil = new ExcelImportUtil();
         try {
-            excelImportUtil.setFilePath("C:\\Users\\user1\\Desktop\\%E5%87%BA%E5%BA%93%E8%AE%A2%E5%8D%95%E6%A8%A1%E6%9D%BF.xlsx")
+            excelImportUtil.setFilePath("C:\\Users\\user1\\Desktop\\出库订单模板.xlsx")
                     .setSaveImage(new SaveImageImpl())
-                    .read(2, new User(), Collections.singletonList(1), null)
+                    .read(2, new User(), null, null)
                     .validate().generateErrorMap();
         } catch (Exception e) {
             e.printStackTrace();
