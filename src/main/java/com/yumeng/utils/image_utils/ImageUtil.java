@@ -1,6 +1,6 @@
 package com.yumeng.utils.image_utils;
 
-import org.apache.commons.lang3.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
@@ -13,7 +13,7 @@ public class ImageUtil {
      * @return 转换成Base64编码的图片内容字符串
      */
     public static String getImageBase64String(String imageFile) {
-        if (StringUtils.isEmpty(imageFile)) {
+        if (StrUtil.hasBlank(imageFile)) {
             return "";
         }
         File file = new File(imageFile);

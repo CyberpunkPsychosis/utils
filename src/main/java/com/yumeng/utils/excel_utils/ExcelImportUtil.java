@@ -2,12 +2,15 @@ package com.yumeng.utils.excel_utils;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
+import com.yumeng.utils.file_utils.FileUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.poi.ss.usermodel.PictureData;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -30,9 +33,14 @@ public class ExcelImportUtil {
     private String filePath;
     
     /**
-     * 文件流
+     * 文件流1
      */
-    private InputStream inputStream;
+    private InputStream inputStream1;
+
+    /**
+     * 文件流2
+     */
+    private InputStream inputStream2;
     
     /**
      * 错误行信息
@@ -73,7 +81,11 @@ public class ExcelImportUtil {
     }
     
     public ExcelImportUtil setInputStream(InputStream inputStream){
-        this.inputStream = inputStream;
+        ByteArrayOutputStream byteArrayOutputStream = FileUtils.cloneInputStream(inputStream);
+        if (byteArrayOutputStream != null){
+            this.inputStream1 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            this.inputStream2 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        }
         return this;
     }
     
@@ -108,19 +120,19 @@ public class ExcelImportUtil {
         dataListener.setIgnoreRow(ignoreRow);
         dataListener.setMap(this.map);
         dataListener.setExcelImportUtil(this);
-        if (this.filePath == null && this.inputStream == null){
+        if (this.filePath == null && this.inputStream1 == null){
             throw new Exception("缺少数据源");
         }
         if (this.filePath == null){
-            List<Map<Integer, Map<Integer, PictureData>>> pictures = ExcelImageUtil.getSheetPictures(this.inputStream);
+            List<Map<Integer, Map<Integer, PictureData>>> pictures = ExcelImageUtil.getSheetPictures(this.inputStream1);
             if (pictures.size() != 0){
                 dataListener.setPictureMap(pictures.get(this.sheetNo - 1));
             }
-            EasyExcel.read(this.inputStream, g.getClass(), dataListener)
+            EasyExcel.read(this.inputStream2, g.getClass(), dataListener)
                     .extraRead(CellExtraTypeEnum.MERGE)
                     .sheet(this.sheetNo-1)
                     .headRowNumber(startRow).doRead();
-        }else if(this.inputStream == null){
+        }else if(this.inputStream1 == null){
             List<Map<Integer, Map<Integer, PictureData>>> pictures = ExcelImageUtil.getSheetPictures(this.filePath);
             if (pictures.size() != 0){
                 dataListener.setPictureMap(pictures.get(this.sheetNo - 1));
