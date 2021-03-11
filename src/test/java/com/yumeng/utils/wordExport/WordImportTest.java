@@ -1,12 +1,9 @@
 package com.yumeng.utils.wordExport;
 
 import com.yumeng.utils.image_utils.ImageUtil;
-import com.yumeng.utils.word_utils.WordUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,14 +19,14 @@ class WordImportTest {
 //                    "C:\\Users\\user1\\Desktop\\freemarker测试.ftl",
 //                    "C:\\Users\\user1\\Desktop\\freemarker测试.doc"
 //                    );
-            byte[] bytes = WordUtil.generateByte(getWordData(),
-                    "C:\\Users\\user1\\Desktop\\freemarker测试.ftl"
-            );
-            File file = new File("C:\\Users\\user1\\Desktop\\freemarker测试.html");
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes, 0, bytes.length);
-            fos.flush();
-            fos.close();
+//            byte[] bytes = WordUtil.generateByte(getWordData(),
+//                    "C:\\Users\\user1\\Desktop\\freemarker测试.ftl"
+//            );
+//            File file = new File("C:\\Users\\user1\\Desktop\\freemarker测试.html");
+//            FileOutputStream fos = new FileOutputStream(file);
+//            fos.write(bytes, 0, bytes.length);
+//            fos.flush();
+//            fos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

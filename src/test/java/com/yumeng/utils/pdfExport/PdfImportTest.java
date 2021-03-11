@@ -1,7 +1,5 @@
 package com.yumeng.utils.pdfExport;
 
-import com.yumeng.utils.pdf_utils.PdfUtil;
-import com.yumeng.utils.word_utils.WordUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,16 +11,16 @@ class PdfImportTest {
 
     @Test
     void contextLoads() {
-        try {
-            WordUtil.generateFile(getWordData(),
-                    "C:\\Users\\user1\\Desktop\\freemarker测试html.ftl",
-                    "C:\\Users\\user1\\Desktop\\freemarker测试html.html"
-                    );
-            PdfUtil.createPdfByPath("C:\\Users\\user1\\Desktop\\freemarker测试html.html",
-                    "C:\\Users\\user1\\Desktop\\freemarker测试pdf.pdf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            WordUtil.generateFile(getWordData(),
+//                    "C:\\Users\\user1\\Desktop\\freemarker测试html.ftl",
+//                    "C:\\Users\\user1\\Desktop\\freemarker测试html.html"
+//                    );
+//            PdfUtil.createPdfByPath("C:\\Users\\user1\\Desktop\\freemarker测试html.html",
+//                    "C:\\Users\\user1\\Desktop\\freemarker测试pdf.pdf");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
