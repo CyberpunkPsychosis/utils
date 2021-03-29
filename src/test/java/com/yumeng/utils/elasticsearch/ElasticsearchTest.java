@@ -1,13 +1,5 @@
 package com.yumeng.utils.elasticsearch;
 
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ElasticsearchTest {
     @Test
     void contextLoads() throws Exception{
-        RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost("localhost", 9200, "http"),
-                        new HttpHost("localhost", 9201, "http")));
+//        RestHighLevelClient client = new RestHighLevelClient(
+//                RestClient.builder(
+//                        new HttpHost("localhost", 9200, "http"),
+//                        new HttpHost("localhost", 9201, "http")));
 
 //        Map<String, Object> jsonMap = new HashMap<>();
 //        jsonMap.put("first_name", "Douglas");
@@ -39,12 +31,12 @@ public class ElasticsearchTest {
 //                .id("3").source(jsonMap)
 //                .opType(DocWriteRequest.OpType.CREATE);
 
-        SearchRequest searchRequest = new SearchRequest("megacorp");
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        System.out.println(searchResponse.toString());
+//        SearchRequest searchRequest = new SearchRequest("megacorp");
+//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+//        searchRequest.source(searchSourceBuilder);
+//        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+//        System.out.println(searchResponse.toString());
 
 //        IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
 //        if (indexResponse.getResult() == DocWriteResponse.Result.CREATED) {
@@ -63,6 +55,6 @@ public class ElasticsearchTest {
 //                System.out.println(reason);
 //            }
 //        }
-        client.close();
+//        client.close();
     }
 }

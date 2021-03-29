@@ -5,9 +5,11 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 /**
  * @Description 路径工具类
@@ -33,14 +35,18 @@ public class PathUtil {
         }
     }
 
-    public static String getTempPath(){
+    public static String getTempDir(){
         return SYSTEM_PATH + File.separator + DEFAULT_TEMP;
     }
 
-    public static String getResourcePath(String path){
+    public static String getTempPath(String suffix){
+        return PathUtil.getTempDir() + File.separator + UUID.randomUUID() + suffix;
+    }
+
+    public static InputStream getResourceStream(String path) {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         try {
-            return resourceLoader.getResource(path).getURL().getPath();
+            return resourceLoader.getResource(path).getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
             return null;

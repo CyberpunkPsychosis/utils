@@ -21,6 +21,8 @@ class PdfImportTest {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+//        PdfUtil.word2pdf("C:\\Users\\user1\\Desktop\\测试.docx", "C:\\Users\\user1\\Desktop\\测试.pdf");
+
     }
 
     /**
