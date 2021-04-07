@@ -39,7 +39,7 @@ public class WordUtil {
 
     private static Template getTemplate(String sourceFtlPath) throws Exception{
         // 设置FreeMarker的版本和编码格式
-        Configuration configuration = new Configuration(new Version("2.3.28"));
+        Configuration configuration = new Configuration(new Version("2.3.31"));
         configuration.setDefaultEncoding("UTF-8");
         // 设置FreeMarker生成Word文档所需要的模板的路径
         configuration.setDirectoryForTemplateLoading(new File(sourceFtlPath.substring(0, sourceFtlPath.lastIndexOf(File.separator)+1)));
