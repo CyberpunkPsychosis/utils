@@ -1,5 +1,6 @@
 package com.yumeng.utils.path_utils;
 
+import cn.hutool.core.util.IdUtil;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
@@ -9,7 +10,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 /**
  * @Description 路径工具类
@@ -40,7 +40,7 @@ public class PathUtil {
     }
 
     public static String getTempPath(String suffix){
-        return PathUtil.getTempDir() + File.separator + UUID.randomUUID() + suffix;
+        return PathUtil.getTempDir() + File.separator + IdUtil.simpleUUID() + suffix;
     }
 
     public static InputStream getResourceStream(String path) {
