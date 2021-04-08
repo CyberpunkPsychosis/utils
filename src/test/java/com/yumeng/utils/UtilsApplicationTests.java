@@ -90,23 +90,31 @@ class UtilsApplicationTests {
 
         PdfPTable header = new PdfPTable(2);
         PdfPTable headerLeft = new PdfPTable(1);
+
         //顶部左边的图片
         PdfPCell pdfPCell = new PdfPCell(new Phrase(" ", font));
         pdfPCell.setFixedHeight(60);
         pdfPCell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
         pdfPCell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        pdfPCell.disableBorderSide(15);
         headerLeft.addCell(pdfPCell);
 
         PdfPCell pdfPCell2 = new PdfPCell(new Phrase(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), font));
         pdfPCell2.setFixedHeight(20);
         pdfPCell2.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
         pdfPCell2.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        pdfPCell2.disableBorderSide(15);
         headerLeft.addCell(pdfPCell2);
-        header.addCell(headerLeft);
+
+        PdfPCell pdfPCell3 = new PdfPCell(headerLeft);
+        pdfPCell3.disableBorderSide(13);
+
+        header.addCell(pdfPCell3);
         //顶部右边的图片
         PdfPCell pdfPCell1 = new PdfPCell(new Phrase(" ", font));
         pdfPCell1.setFixedHeight(80);
         pdfPCell1.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        pdfPCell1.disableBorderSide(13);
         header.addCell(pdfPCell1);
 
         document.add(header);
