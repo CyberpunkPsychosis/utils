@@ -1,16 +1,14 @@
 package com.yumeng.utils.excelImport;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.yumeng.utils.excel_utils.ImageCol;
-import com.yumeng.utils.excel_utils.MergeCol;
 
 import javax.validation.constraints.NotNull;
 
 public class User {
 
     @ExcelProperty(index = 0)
-    @ImageCol(1)
-    @MergeCol(1)
+//    @ImageCol(1)
+//    @MergeCol(1)
     private String headUrl;
 
     @NotNull(message = "缺少姓名")

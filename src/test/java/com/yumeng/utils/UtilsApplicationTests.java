@@ -1,10 +1,7 @@
 package com.yumeng.utils;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -312,5 +309,280 @@ class UtilsApplicationTests {
         document.add(itemTable);
         document.add(stoArea2);
         document.close();
+    }
+
+
+    @Test
+    void contextLoads2() throws Exception {
+        Document document = new Document(PageSize.A4);
+        document.setMargins(10, 10, 10, 10);
+        OutputStream os = new FileOutputStream(new File("C:\\Users\\user1\\Desktop\\测试.pdf"));
+        PdfWriter writer = PdfWriter.getInstance(document, os);
+        document.open();
+        PdfContentByte directContent = writer.getDirectContent();
+        BaseFont baseFont = BaseFont.createFont("/templates/simsun.ttc" + ",0",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+        Font font = new Font(baseFont);
+
+        //顶部的条形码
+        PdfPTable headerArea = new PdfPTable(2);
+        headerArea.setWidthPercentage(100);
+        headerArea.setWidths(new int[]{40, 60});
+
+        PdfPCell headerLeftCell = new PdfPCell(new Phrase(""));
+        headerLeftCell.setFixedHeight(100);
+        headerLeftCell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerLeftCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerLeftCell.disableBorderSide(13);
+        headerArea.addCell(headerLeftCell);
+
+        PdfPTable headerRightTable = new PdfPTable(1);
+
+        Image stoArea2Cell1Image = Image.getInstance("C:\\Users\\user1\\Pictures\\微信图片_20201013133103.jpg");
+        PdfPCell headerRightTableCell1 = new PdfPCell(stoArea2Cell1Image);
+        headerRightTableCell1.setFixedHeight(80);
+        headerRightTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerRightTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerRightTableCell1.disableBorderSide(15);
+        headerRightTable.addCell(headerRightTableCell1);
+
+        PdfPCell headerRightTableCell2 = new PdfPCell(new Phrase("JP20049274", font));
+        headerRightTableCell2.setFixedHeight(20);
+        headerRightTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerRightTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerRightTableCell2.disableBorderSide(15);
+        headerRightTable.addCell(headerRightTableCell2);
+
+        PdfPCell headerRightTableCell = new PdfPCell(headerRightTable);
+        headerRightTableCell.disableBorderSide(13);
+
+        headerArea.addCell(headerRightTableCell);
+
+
+        //寄件人收件人信息
+        PdfPTable consigneeSenderTable = new PdfPTable(2);
+        consigneeSenderTable.setWidthPercentage(100);
+        consigneeSenderTable.setWidths(new int[]{50, 50});
+
+        PdfPTable consigneeSenderLeftTable = new PdfPTable(1);
+
+        Font consigneeSenderLeftTableCell1Font = new Font(baseFont, 15, Font.BOLD);
+        PdfPCell consigneeSenderLeftTableCell1 = new PdfPCell(new Phrase("寄件", consigneeSenderLeftTableCell1Font));
+        consigneeSenderLeftTableCell1.setFixedHeight(30);
+        consigneeSenderLeftTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        consigneeSenderLeftTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        consigneeSenderLeftTableCell1.disableBorderSide(15);
+        consigneeSenderLeftTableCell1.setPaddingTop(10);
+        consigneeSenderLeftTable.addCell(consigneeSenderLeftTableCell1);
+
+        Font consigneeSenderLeftTableCell2Font = new Font(baseFont, 8);
+        String stringBuilder = "寄件人姓名" + "\n" + "\n" + "寄件人电话" + "\n" + "\n" +
+                "寄件人地址";
+        PdfPCell consigneeSenderLeftTableCell2 = new PdfPCell(new Phrase(stringBuilder, consigneeSenderLeftTableCell2Font));
+        consigneeSenderLeftTableCell2.setFixedHeight(50);
+        consigneeSenderLeftTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        consigneeSenderLeftTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        consigneeSenderLeftTableCell2.disableBorderSide(15);
+        consigneeSenderLeftTable.addCell(consigneeSenderLeftTableCell2);
+
+        PdfPCell consigneeSenderLeftTableCell3 = new PdfPCell(new Phrase("收件", consigneeSenderLeftTableCell1Font));
+        consigneeSenderLeftTableCell3.setFixedHeight(20);
+        consigneeSenderLeftTableCell3.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        consigneeSenderLeftTableCell3.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        consigneeSenderLeftTableCell3.disableBorderSide(15);
+        consigneeSenderLeftTable.addCell(consigneeSenderLeftTableCell3);
+
+        String stringBuilder2 = "收件人姓名" + "\n" + "\n" + "收件人电话" + "\n" + "\n" +
+                "收件人地址";
+        PdfPCell consigneeSenderLeftTableCell4 = new PdfPCell(new Phrase(stringBuilder2, consigneeSenderLeftTableCell2Font));
+        consigneeSenderLeftTableCell4.setFixedHeight(50);
+        consigneeSenderLeftTableCell4.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        consigneeSenderLeftTableCell4.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        consigneeSenderLeftTableCell4.disableBorderSide(13);
+        consigneeSenderLeftTable.addCell(consigneeSenderLeftTableCell4);
+
+        PdfPCell consigneeSenderLeftTableCell = new PdfPCell(consigneeSenderLeftTable);
+        consigneeSenderLeftTableCell.disableBorderSide(15);
+        consigneeSenderTable.addCell(consigneeSenderLeftTableCell);
+
+        Font consigneeSenderRightCellFont = new Font(baseFont, 40, Font.BOLD);
+        PdfPCell consigneeSenderRightCell = new PdfPCell(new Phrase("贵州", consigneeSenderRightCellFont));
+        consigneeSenderRightCell.setFixedHeight(150);
+        consigneeSenderRightCell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        consigneeSenderRightCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        consigneeSenderRightCell.disableBorderSide(13);
+        consigneeSenderTable.addCell(consigneeSenderRightCell);
+
+
+        //JP单号
+        Font jpNumberFont = new Font(baseFont, 40, Font.BOLD);
+        PdfPTable jpNumberArea = new PdfPTable(1);
+        jpNumberArea.setWidthPercentage(100);
+
+        PdfPCell jpNumberAreaCell1 = new PdfPCell(new Phrase("JP20049274", jpNumberFont));
+        jpNumberAreaCell1.setFixedHeight(80);
+        jpNumberAreaCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        jpNumberAreaCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        jpNumberAreaCell1.disableBorderSide(13);
+        jpNumberArea.addCell(jpNumberAreaCell1);
+
+        //订单号 件数 重量
+        PdfPTable orderNumberArea = new PdfPTable(3);
+        orderNumberArea.setWidthPercentage(100);
+        orderNumberArea.setWidths(new int[]{33, 33, 33});
+
+        PdfPCell orderNumberAreaCell1 = new PdfPCell(new Phrase("订单号: 52495811", consigneeSenderLeftTableCell1Font));
+        orderNumberAreaCell1.setFixedHeight(60);
+        orderNumberAreaCell1.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell1.disableBorderSide(13);
+        orderNumberAreaCell1.setPaddingTop(10);
+        orderNumberArea.addCell(orderNumberAreaCell1);
+
+        PdfPCell orderNumberAreaCell2 = new PdfPCell(new Phrase("件数", consigneeSenderLeftTableCell1Font));
+        orderNumberAreaCell2.setFixedHeight(60);
+        orderNumberAreaCell2.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell2.disableBorderSide(13);
+        orderNumberAreaCell2.setPaddingTop(10);
+        orderNumberArea.addCell(orderNumberAreaCell2);
+
+        PdfPCell orderNumberAreaCell3 = new PdfPCell(new Phrase("重量", consigneeSenderLeftTableCell1Font));
+        orderNumberAreaCell3.setFixedHeight(60);
+        orderNumberAreaCell3.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell3.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        orderNumberAreaCell3.disableBorderSide(13);
+        orderNumberAreaCell3.setPaddingTop(10);
+        orderNumberArea.addCell(orderNumberAreaCell3);
+
+        //商品信息和Logo
+        PdfPTable itemArea = new PdfPTable(2);
+        itemArea.setWidthPercentage(100);
+        itemArea.setWidths(new int[]{50, 50});
+
+
+        StringBuilder stringBuilder1 = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            stringBuilder1.append("日用品").append("*").append("1").append("\n");
+        }
+        Font itemAreaCellFont = new Font(baseFont, 15);
+        PdfPCell itemAreaCell1 = new PdfPCell(new Phrase(stringBuilder1.toString(), itemAreaCellFont));
+        itemAreaCell1.setFixedHeight(100);
+        itemAreaCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        itemAreaCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        itemAreaCell1.disableBorderSide(13);
+        itemArea.addCell(itemAreaCell1);
+
+        Image itemAreaCell2Image = Image.getInstance("C:\\Users\\user1\\Pictures\\微信图片_20201013133103.jpg");
+        PdfPCell itemAreaCell2 = new PdfPCell(itemAreaCell2Image);
+        itemAreaCell2.setFixedHeight(100);
+        itemAreaCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        itemAreaCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        itemAreaCell2.disableBorderSide(13);
+        itemAreaCell2.setPaddingTop(5);
+        itemAreaCell2.setPaddingBottom(5);
+        itemArea.addCell(itemAreaCell2);
+
+        //条形码
+        PdfPTable barCodeTable = new PdfPTable(1);
+        barCodeTable.setWidthPercentage(100);
+
+        Image barCodeCellImage = Image.getInstance("C:\\Users\\user1\\Pictures\\微信图片_20201013133103.jpg");
+        PdfPCell barCodeCell = new PdfPCell(barCodeCellImage);
+        barCodeCell.setFixedHeight(100);
+        barCodeCell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        barCodeCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        barCodeCell.disableBorderSide(13);
+        barCodeCell.setPaddingTop(5);
+        barCodeCell.setPaddingBottom(5);
+        barCodeTable.addCell(barCodeCell);
+
+        //寄件收件人信息
+        PdfPTable senderArea = new PdfPTable(2);
+        senderArea.setWidthPercentage(100);
+        senderArea.setWidths(new int[]{50, 50});
+
+        PdfPTable senderAreaLeftTable = new PdfPTable(1);
+
+        Font senderAreaLeftTableCell1Font = new Font(baseFont, 15, Font.BOLD);
+        PdfPCell senderAreaLeftTableCell1 = new PdfPCell(new Phrase("寄件", senderAreaLeftTableCell1Font));
+        senderAreaLeftTableCell1.setFixedHeight(30);
+        senderAreaLeftTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        senderAreaLeftTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        senderAreaLeftTableCell1.disableBorderSide(15);
+        senderAreaLeftTableCell1.setPaddingTop(10);
+        senderAreaLeftTable.addCell(senderAreaLeftTableCell1);
+
+        String stringBuilder3 = "寄件人姓名" + "\n" + "寄件人电话" + "\n" +
+                "寄件人地址";
+        PdfPCell senderAreaLeftTableCell2 = new PdfPCell(new Phrase(stringBuilder3, font));
+        senderAreaLeftTableCell2.setFixedHeight(80);
+        senderAreaLeftTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        senderAreaLeftTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        senderAreaLeftTableCell2.disableBorderSide(15);
+        senderAreaLeftTable.addCell(senderAreaLeftTableCell2);
+
+        PdfPCell senderAreaLeftTableCell = new PdfPCell(senderAreaLeftTable);
+        senderAreaLeftTableCell.disableBorderSide(13);
+        senderArea.addCell(senderAreaLeftTableCell);
+
+
+        PdfPTable senderAreaRightTable = new PdfPTable(1);
+
+        Font senderAreaRightTableCell1Font = new Font(baseFont, 15, Font.BOLD);
+        PdfPCell senderAreaRightTableCell1 = new PdfPCell(new Phrase("收件", senderAreaRightTableCell1Font));
+        senderAreaRightTableCell1.setFixedHeight(30);
+        senderAreaRightTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        senderAreaRightTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        senderAreaRightTableCell1.disableBorderSide(15);
+        senderAreaRightTableCell1.setPaddingTop(10);
+        senderAreaRightTable.addCell(senderAreaRightTableCell1);
+
+        String stringBuilder4 = "收件人姓名" + "\n" + "收件人电话" + "\n" +
+                "收件人地址";
+        PdfPCell senderAreaRightTableCell2 = new PdfPCell(new Phrase(stringBuilder4, font));
+        senderAreaRightTableCell2.setFixedHeight(80);
+        senderAreaRightTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        senderAreaRightTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        senderAreaRightTableCell2.disableBorderSide(13);
+        senderAreaRightTable.addCell(senderAreaRightTableCell2);
+
+        PdfPCell senderAreaRightTableCell = new PdfPCell(senderAreaRightTable);
+        senderAreaRightTableCell.disableBorderSide(15);
+        senderArea.addCell(senderAreaRightTableCell);
+
+        //二维码
+        PdfPTable qrCodeArea = new PdfPTable(2);
+        qrCodeArea.setWidthPercentage(100);
+        qrCodeArea.setWidths(new int[]{60, 40});
+
+        Font qrCodeAreaTableCell1Font = new Font(baseFont, 15);
+        String tips = "备注: 收获前请确认包装是否完, 有无破损, 如有问题, 请拒绝签收" + "\n" + "\n" + "JP20049274";
+        PdfPCell qrCodeAreaTableCell1 = new PdfPCell(new Phrase(tips, qrCodeAreaTableCell1Font));
+        qrCodeAreaTableCell1.setFixedHeight(100);
+        qrCodeAreaTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        qrCodeAreaTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        qrCodeAreaTableCell1.disableBorderSide(15);
+        qrCodeAreaTableCell1.setPaddingTop(20);
+        qrCodeArea.addCell(qrCodeAreaTableCell1);
+
+        Image qrCodeAreaTableCell2Image = Image.getInstance("C:\\Users\\user1\\Pictures\\微信图片_20201013133103.jpg");
+        PdfPCell qrCodeAreaTableCell2 = new PdfPCell(qrCodeAreaTableCell2Image);
+        qrCodeAreaTableCell2.setFixedHeight(100);
+        qrCodeAreaTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        qrCodeAreaTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        qrCodeAreaTableCell2.disableBorderSide(15);
+        qrCodeAreaTableCell2.setPaddingTop(20);
+        qrCodeArea.addCell(qrCodeAreaTableCell2);
+
+        document.add(headerArea);
+        document.add(consigneeSenderTable);
+        document.add(jpNumberArea);
+        document.add(orderNumberArea);
+        document.add(itemArea);
+        document.add(barCodeTable);
+        document.add(senderArea);
+        document.add(qrCodeArea);
+        document.close();
+        os.close();
     }
 }
