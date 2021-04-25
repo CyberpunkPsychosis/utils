@@ -1,5 +1,8 @@
 package com.yumeng.utils;
 
+import cn.hutool.core.util.IdUtil;
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import org.junit.jupiter.api.Test;
@@ -9,7 +12,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 class UtilsApplicationTests {
@@ -585,4 +591,337 @@ class UtilsApplicationTests {
         document.close();
         os.close();
     }
+
+    @Test
+    void contextLoads3() throws Exception {
+        Rectangle EXP = new RectangleReadOnly(283.3F, 425F);
+        Document document = new Document(EXP);
+        document.setMargins(5, 5, 5, 5);
+        OutputStream os = new FileOutputStream(new File("C:\\Users\\user1\\Desktop\\测试.pdf"));
+        PdfWriter writer = PdfWriter.getInstance(document, os);
+        document.open();
+        PdfContentByte cb = writer.getDirectContent();
+        BaseFont baseFont = BaseFont.createFont("/templates/simsun.ttc" + ",0",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+        Font font = new Font(baseFont);
+
+
+        PdfPTable headerArea = new PdfPTable(2);
+        headerArea.setWidthPercentage(100);
+        headerArea.setWidths(new int[]{30, 70});
+
+        PdfPTable headerLeftTable = new PdfPTable(1);
+
+        Font headerLeftTableFont = new Font(baseFont, 20, Font.BOLD);
+        PdfPCell headerLeftTableCell1 = new PdfPCell(new Phrase("配货单", headerLeftTableFont));
+        headerLeftTableCell1.setFixedHeight(60);
+        headerLeftTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerLeftTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerLeftTableCell1.disableBorderSide(15);
+        headerLeftTable.addCell(headerLeftTableCell1);
+
+        PdfPCell headerLeftTableCell2 = new PdfPCell(new Phrase("批次号", font));
+        headerLeftTableCell2.setFixedHeight(20);
+        headerLeftTableCell2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerLeftTableCell2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerLeftTableCell2.disableBorderSide(15);
+        headerLeftTable.addCell(headerLeftTableCell2);
+
+        PdfPCell headerRightTableCell = new PdfPCell(headerLeftTable);
+        headerRightTableCell.disableBorderSide(13);
+
+        headerArea.addCell(headerRightTableCell);
+
+        Barcode128 code128 = new Barcode128();
+        code128.setCode(IdUtil.simpleUUID());
+        code128.setCodeType(Barcode128.CODE128);
+//        code128.setFont(null);
+        Image code128Image = code128.createImageWithBarcode(cb, null, null);
+        code128Image.scalePercent(60);
+        PdfPCell headerRightTableCell1 = new PdfPCell(code128Image);
+        headerRightTableCell1.setFixedHeight(80);
+        headerRightTableCell1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        headerRightTableCell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        headerRightTableCell1.disableBorderSide(13);
+        headerArea.addCell(headerRightTableCell1);
+
+        PdfPTable itemTable = new PdfPTable(3);
+        itemTable.setWidthPercentage(100);
+        itemTable.setWidths(new int[]{33, 33, 33});
+
+        Font itemTableCellTitleFont = new Font(baseFont, 9, Font.BOLD);
+        PdfPCell itemTableCellTitle1 = new PdfPCell(new Phrase("JAN", itemTableCellTitleFont));
+        itemTableCellTitle1.setFixedHeight(20);
+        itemTableCellTitle1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        itemTableCellTitle1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        itemTableCellTitle1.disableBorderSide(13);
+        itemTable.addCell(itemTableCellTitle1);
+
+        PdfPCell itemTableCellTitle2 = new PdfPCell(new Phrase("数量", itemTableCellTitleFont));
+        itemTableCellTitle2.setFixedHeight(20);
+        itemTableCellTitle2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        itemTableCellTitle2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        itemTableCellTitle2.disableBorderSide(13);
+        itemTable.addCell(itemTableCellTitle2);
+
+        PdfPCell itemTableCellTitle3 = new PdfPCell(new Phrase("品名", itemTableCellTitleFont));
+        itemTableCellTitle3.setFixedHeight(20);
+        itemTableCellTitle3.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        itemTableCellTitle3.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        itemTableCellTitle3.disableBorderSide(13);
+        itemTable.addCell(itemTableCellTitle3);
+
+        Font tempFont = new Font(baseFont, 9);
+        for (int i = 0; i < 10; i++) {
+            PdfPCell temp1 = new PdfPCell(new Phrase("JAN", tempFont));
+            temp1.setFixedHeight(20);
+            temp1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            temp1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            if (i == 9) {
+                temp1.disableBorderSide(13);
+            } else {
+                temp1.disableBorderSide(15);
+            }
+            itemTable.addCell(temp1);
+
+            PdfPCell temp2 = new PdfPCell(new Phrase("数量", tempFont));
+            temp2.setFixedHeight(20);
+            temp2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            temp2.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            if (i == 9) {
+                temp2.disableBorderSide(13);
+            } else {
+                temp2.disableBorderSide(15);
+            }
+            itemTable.addCell(temp2);
+
+            PdfPCell temp3 = new PdfPCell(new Phrase("品名", tempFont));
+            temp3.setFixedHeight(20);
+            temp3.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            temp3.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            if (i == 9) {
+                temp3.disableBorderSide(13);
+            } else {
+                temp3.disableBorderSide(15);
+            }
+            itemTable.addCell(temp3);
+        }
+
+        PdfPTable remark = new PdfPTable(1);
+        remark.setWidthPercentage(100);
+
+        PdfPCell remarkCell = new PdfPCell(new Phrase("备注", itemTableCellTitleFont));
+        remarkCell.setFixedHeight(20);
+        remarkCell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        remarkCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        remarkCell.disableBorderSide(13);
+        remark.addCell(remarkCell);
+
+        PdfPTable bottom = new PdfPTable(2);
+        bottom.setWidthPercentage(100);
+        bottom.setWidths(new int[]{60, 40});
+
+        PdfPTable bottomLeft = new PdfPTable(1);
+
+        Font bottomFont = new Font(baseFont, 12);
+        PdfPCell bottomLeft1 = new PdfPCell(new Phrase("收件人姓名", bottomFont));
+        bottomLeft1.setFixedHeight(30);
+        bottomLeft1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        bottomLeft1.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        bottomLeft1.disableBorderSide(15);
+        bottomLeft.addCell(bottomLeft1);
+
+        PdfPCell bottomLeft2 = new PdfPCell(new Phrase("地址", bottomFont));
+        bottomLeft2.setFixedHeight(30);
+        bottomLeft2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        bottomLeft2.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        bottomLeft2.disableBorderSide(15);
+        bottomLeft.addCell(bottomLeft2);
+
+
+        PdfPCell bottomLeft3 = new PdfPCell(new Phrase("代理名称/用户名称", bottomFont));
+        bottomLeft3.setFixedHeight(30);
+        bottomLeft3.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        bottomLeft3.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        bottomLeft3.disableBorderSide(15);
+        bottomLeft.addCell(bottomLeft3);
+
+        PdfPCell bottomLeftCell = new PdfPCell(bottomLeft);
+        bottomLeftCell.disableBorderSide(13);
+
+        bottom.addCell(bottomLeftCell);
+
+
+        PdfPTable bottomRight = new PdfPTable(1);
+
+        BarcodeQRCode qrcode = new BarcodeQRCode("https://www.baidu.com/", 2, 2, null);
+        Image qrcodeImage = qrcode.getImage();
+        qrcodeImage.scalePercent(200);
+        PdfPCell bottomRight1 = new PdfPCell(qrcodeImage);
+        bottomRight1.setFixedHeight(70);
+        bottomRight1.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        bottomRight1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        bottomRight1.disableBorderSide(15);
+        bottomRight1.setPaddingTop(5);
+        bottomRight.addCell(bottomRight1);
+
+        PdfPCell bottomRight2 = new PdfPCell(new Phrase("订单类型B2B/B2C", bottomFont));
+        bottomRight2.setFixedHeight(20);
+        bottomRight2.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        bottomRight2.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        bottomRight2.disableBorderSide(15);
+        bottomRight.addCell(bottomRight2);
+
+        PdfPCell bottomRightCell = new PdfPCell(bottomRight);
+        bottomRightCell.disableBorderSide(13);
+
+        bottom.addCell(bottomRightCell);
+
+        document.add(headerArea);
+        document.add(itemTable);
+        document.add(remark);
+        document.add(bottom);
+        document.close();
+    }
+
+    @Test
+    void contextLoads4() throws Exception {
+        Demo demo1 = new Demo(1);
+        Demo demo2 = new Demo(2);
+        Demo demo3 = new Demo(3);
+        Demo demo4 = new Demo(4);
+        Demo demo5 = new Demo(5);
+        Demo demo6 = new Demo(6);
+        Demo demo7 = new Demo(7);
+        Demo demo8 = new Demo(8);
+        Demo demo9 = new Demo(9);
+        Demo demo10 = new Demo(10);
+        Demo demo11 = new Demo(11);
+        Demo demo12 = new Demo(12);
+
+        List<Demo> list = new ArrayList<>();
+        list.add(demo1);
+        list.add(demo2);
+        list.add(demo3);
+        list.add(demo4);
+        list.add(demo5);
+        list.add(demo6);
+        list.add(demo7);
+        list.add(demo8);
+        list.add(demo9);
+        list.add(demo10);
+        list.add(demo11);
+        list.add(demo12);
+
+        list.sort(Comparator.comparing(Demo::getIndex));
+
+        System.out.println(list.toString());
+    }
+
+    class Demo {
+        private Integer index;
+
+        public Demo(Integer index) {
+            this.index = index;
+        }
+
+        public Integer getIndex() {
+            return index;
+        }
+
+        public void setIndex(Integer index) {
+            this.index = index;
+        }
+
+        @Override
+        public String toString() {
+            return "Demo{" +
+                    "index=" + index +
+                    '}';
+        }
+    }
+
+    @Test
+    void contextLoads5() throws Exception {
+        // 写法1
+//        String fileName = PathUtil.getTempDir() + "simpleWrite" + System.currentTimeMillis() + ".xlsx";
+//        // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+//        // 如果这里想使用03 则 传入excelType参数即可
+//        EasyExcel.write(fileName, DemoData.class).sheet("模板").doWrite(data());
+//
+//        // 写法2
+//        fileName = TestFileUtil.getPath() + "simpleWrite" + System.currentTimeMillis() + ".xlsx";
+//        // 这里 需要指定写用哪个class去写
+//        ExcelWriter excelWriter = null;
+//        try {
+//            excelWriter = EasyExcel.write(fileName, DemoData.class).build();
+//            WriteSheet writeSheet = EasyExcel.writerSheet("模板").build();
+//            excelWriter.write(data(), writeSheet);
+//        } finally {
+//            // 千万别忘记finish 会帮忙关闭流
+//            if (excelWriter != null) {
+//                excelWriter.finish();
+//            }
+//        }
+    }
+
+
+    public class DemoData {
+        @ExcelProperty("字符串标题")
+        private String string;
+        @ExcelProperty("日期标题")
+        private Date date;
+        @ExcelProperty("数字标题")
+        private Double doubleData;
+        /**
+         * 忽略这个字段
+         */
+        @ExcelIgnore
+        private String ignore;
+
+        public String getString() {
+            return string;
+        }
+
+        public void setString(String string) {
+            this.string = string;
+        }
+
+        public Date getDate() {
+            return date;
+        }
+
+        public void setDate(Date date) {
+            this.date = date;
+        }
+
+        public Double getDoubleData() {
+            return doubleData;
+        }
+
+        public void setDoubleData(Double doubleData) {
+            this.doubleData = doubleData;
+        }
+
+        public String getIgnore() {
+            return ignore;
+        }
+
+        public void setIgnore(String ignore) {
+            this.ignore = ignore;
+        }
+    }
+
+    private List<DemoData> data() {
+        List<DemoData> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            DemoData data = new DemoData();
+            data.setString("字符串" + i);
+            data.setDate(new Date());
+            data.setDoubleData(0.56);
+            list.add(data);
+        }
+        return list;
+    }
+
+
 }
